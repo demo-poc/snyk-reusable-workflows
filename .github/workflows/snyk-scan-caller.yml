@@ -8,7 +8,7 @@ on:
 
 jobs:
   snyk-scans:
-    uses: ./.github/workflows/snyk-scan.yml
+    uses: ./.github/workflows/snyk-scan.yml@main
     with:
       project-directory: '.'
       snyk-token: secrets.SNYK_TOKEN
