@@ -24,13 +24,13 @@ jobs:
 
       # Set up Snyk
       - name: Set up Snyk
-        uses: snyk/actions/setup@v2
+        uses: snyk/actions/setup
         with:
           token: ${{ inputs.snyk-token }}
 
       # Run SCA (Open Source and Dependencies Analysis)
       - name: Run Snyk Open Source Scan (SCA)
-        uses: snyk/actions/scan@v2
+        uses: snyk/actions/scan
         with:
           token: ${{ inputs.snyk-token }}
           project-directory: ${{ inputs.project-directory }}
@@ -38,7 +38,7 @@ jobs:
 
       # Run SAST (Code Security Analysis)
       - name: Run Snyk Code Scan (SAST)
-        uses: snyk/actions/scan@v2
+        uses: snyk/actions/scan
         with:
           token: ${{ inputs.snyk-token }}
           project-directory: ${{ inputs.project-directory }}
@@ -46,7 +46,7 @@ jobs:
 
       # Run Infrastructure as Code Scan
       - name: Run Snyk IaC Scan
-        uses: snyk/actions/scan@v2
+        uses: snyk/actions/scan
         with:
           token: ${{ inputs.snyk-token }}
           project-directory: ${{ inputs.project-directory }}
