@@ -1,0 +1,76 @@
+name: Snyk Security Scans
+
+on:
+  workflow_call:
+    inputs:
+      project-directory:
+        description: 'Directory of the project to scan'
+        required: true
+        type: string
+      snyk-token:
+        description: 'Snyk authentication token'
+        required: true
+        type: string
+
+jobs:
+  snyk-scan:
+    name: Run Snyk Scans
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Snyk
+      - name: Set up Snyk
+        uses: snyk/actions/setup@v2
+        with:
+          token: ${{ inputs.snyk-token }}
+
+      # Run SCA (Open Source and Dependencies Analysis)
+      - name: Run Snyk Open Source Scan (SCA)
+        uses: snyk/actions/scan@v2
+        with:
+          token: ${{ inputs.snyk-token }}
+          project-directory: ${{ inputs.project-directory }}
+          scan: 'snyk test --all-projects --sarif-file-output=snyk-sca.sarif'
+
+      # Run SAST (Code Security Analysis)
+      - name: Run Snyk Code Scan (SAST)
+        uses: snyk/actions/scan@v2
+        with:
+          token: ${{ inputs.snyk-token }}
+          project-directory: ${{ inputs.project-directory }}
+          scan: 'snyk code test --sarif-file-output=snyk-sast.sarif'
+
+      # Run Infrastructure as Code Scan
+      - name: Run Snyk IaC Scan
+        uses: snyk/actions/scan@v2
+        with:
+          token: ${{ inputs.snyk-token }}
+          project-directory: ${{ inputs.project-directory }}
+          scan: 'snyk iac test --sarif-file-output=snyk-iac.sarif'
+
+      # Upload SARIF files to GitHub Security tab
+      - name: Upload SCA SARIF Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-sca.sarif
+
+      - name: Upload SAST SARIF Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-sast.sarif
+
+      - name: Upload IaC SARIF Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-iac.sarif
+
+      # Upload all SARIF files as artifacts for additional inspection
+      - name: Upload SARIF Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: snyk-sarif-reports
+          path: '*.sarif'

@@ -1,0 +1,14 @@
+name: Run Snyk Security Scans
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  snyk-scans:
+    uses: ./.github/workflows/snyk-scan.yml
+    with:
+      project-directory: '.'
+      snyk-token: ${{ secrets.SNYK_TOKEN }}
