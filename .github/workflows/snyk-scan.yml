@@ -24,7 +24,7 @@ jobs:
 
       # Set up Snyk
       - name: Set up Snyk
-        uses: snyk/actions/setup
+        uses: snyk/actions/setup@0.4.0
         with:
           token: ${{ inputs.snyk-token }}
 
