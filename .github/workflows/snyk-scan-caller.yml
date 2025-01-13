@@ -11,4 +11,4 @@ jobs:
     uses: ./.github/workflows/snyk-scan.yml
     with:
       project-directory: '.'
-      snyk-token: ${{ secrets.SNYK_TOKEN }}
+      snyk-token: secrets.SNYK_TOKEN
